@@ -977,17 +977,22 @@
 
   window.addEventListener('DOMContentLoaded', () => {
     initGoogleAuth();
+    
+    // Foydalanuvchi oldin kirgan bo'lsa, auth oynasini chiqarib o'tirmaymiz
+    if (state.user) {
+      document.getElementById('auth-screen').classList.add('hidden-screen');
+      document.getElementById('splash-screen').classList.add('hidden-screen');
+    } else {
+      setTimeout(() => {
+        document.getElementById('splash-screen').classList.add('hidden-screen');
+        document.getElementById('auth-screen').classList.remove('hidden-screen');
+      }, 1800);
+    }
+
     restoreUserUI();
     updateStatsUI();
     renderHistoryUI();
     applyUiTranslations();
-
-    setTimeout(() => {
-      document.getElementById('splash-screen').classList.add('hidden-screen');
-      if (!state.user) {
-        document.getElementById('auth-screen').classList.remove('hidden-screen');
-      }
-    }, 1800);
   });
 
   function applyUiTranslations() {
@@ -1019,7 +1024,6 @@
           document.getElementById('google-btn-container'),
           { theme: 'outline', size: 'large', shape: 'pill', width: 320, text: 'signin_with' }
         );
-        google.accounts.id.prompt();
       }
     } catch (e) {}
   }
